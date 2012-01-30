@@ -39,6 +39,18 @@ urlpatterns = patterns('',
         name='syspanel_overview'),
 )
 
+urlpatterns += patterns('dash_billing.dash.views',
+    url(r'^dash/dash_billing/billing/$', 'index', name='dash_billing'),
+    url(r'^dash/dash_billing/eventlog/$', 'eventlog', name='dash_eventlog'),
+    url(r'^dash/dash_billing/eventlog/(?P<request_id>[^/]+)$', 'eventlog',name='dash_eventlog_by_request_id'),
+)
+
+urlpatterns += patterns('dash_billing.syspanel.views',
+    url(r'^syspanel/billing/$', 'index', name='syspanel_billing'),
+    url(r'^syspanel/billing/create/$', 'create', name='syspanel_billing_create'),
+    url(r'^syspanel/billing/eventlog/$', 'eventlog', name='syspanel_eventlog')
+)
+
 # Development static app and project media serving using the staticfiles app.
 urlpatterns += staticfiles_urlpatterns()
 

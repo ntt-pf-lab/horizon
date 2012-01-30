@@ -10,6 +10,8 @@
     <li><a {% if current_sidebar == "keypairs" %} class="active" {% endif %} href="{% url dash_keypairs request.user.tenant_id %}">Keypairs</a></li>
     <li><a {% if current_sidebar == "floatingips" %} class="active" {% endif %} href="{% url dash_floating_ips request.user.tenant_id %}">Floating IPs</a></li>
     <li><a {% if current_sidebar == "security_groups" %} class="active" {% endif %} href="{% url dash_security_groups request.user.tenant_id %}">Security Groups</a></li>
+    <li><a {% if current_sidebar == "dash_billing" %} class="active" {% endif %} href="{% url dash_billing %}">Billing</a></li>
+    <li><a {% if current_sidebar == "dash_eventlog" %} class="active" {% endif %} href="{% url dash_eventlog %}">Event Log</a></li>
     {% if quantum_configured %}
       <li><a {% if current_sidebar == "networks" %} class="active" {% endif %} href="{% url dash_networks request.user.tenant_id %}">Networks</a></li>
     {% endif %}

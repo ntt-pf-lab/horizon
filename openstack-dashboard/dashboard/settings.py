@@ -25,6 +25,7 @@ import sys
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 sys.path.append(ROOT_PATH)
+sys.path.append(os.path.dirname(ROOT_PATH))
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -91,7 +92,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_openstack',
     'django_openstack.templatetags',
-    'mailer',
+    #'mailer',
 )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
