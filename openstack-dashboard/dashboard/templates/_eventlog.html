@@ -1,0 +1,27 @@
+<table id="eventlogs" class="wide">
+  <tr>
+    <th>ID</th>
+    <th>Priority</th>
+    <th>Type</th>
+    <th>Publisher</th>
+    <th>Tenant</th>
+    <th>User</th>
+    <th>RequestID</th>
+    <th>Message</th>
+    <th>Created</th>
+  </tr>
+  {% for record in eventlog_list.object_list  %}
+  <tr id="records" class="{% cycle 'odd' 'even' %}">
+      <td>{{record.id}}</td>
+      <td><a href="{% url syspanel_eventlog %}?priority={{record.priority}}">{{record.priority}}</a></td>
+      <td>{{record.event_type}}</td>
+      <td>{{record.publisher_id}}</td>
+      <td>{{record.tenant_id}}</td>
+      <td>{{record.user_id}}</td>
+      <td><a href="{% url syspanel_eventlog %}?request_id={{record.request_id}}"><img alt='{{record.request_id}}' src='http://identicon.relucks.org/{{record.request_id}}?size=24'/>Show Related</a></td>
+      <td><a href="javascript:(function(){$('#record_{{record.id}}').toggle();})()" >Detail</a><pre id="record_{{record.id}}" style='display:none;font-size:12px;'>{{record.message|linebreaksbr}}</pre></td>
+      <td>{{record.created}}</td>
+  </tr>
+  {% endfor %}
+</table>
+

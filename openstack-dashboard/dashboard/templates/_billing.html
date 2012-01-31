@@ -1,0 +1,19 @@
+<table id="billing" class="wide">
+  <tr>
+    <th>ID</th>
+    <th>Tenant ID</th>
+    <th>Amount</th>
+    <th>Date</th>
+    <th>Memo</th>
+  </tr>
+  {% for record in account_record_list.object_list  %}
+  <tr id="records" class="{% cycle 'odd' 'even' %}">
+      <td>{{record.id}}</td>
+      <td>{{record.tenant_id}}</td>
+      <td>{{record.amount}}</td>
+      <td>{{record.time}}</td>
+      <td>{{record.memo}}</td>
+  </tr>
+  {% endfor %}
+</table>
+
