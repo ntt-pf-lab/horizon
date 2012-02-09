@@ -48,7 +48,8 @@ urlpatterns += patterns('dash_billing.dash.views',
 urlpatterns += patterns('dash_billing.syspanel.views',
     url(r'^syspanel/billing/$', 'index', name='syspanel_billing'),
     url(r'^syspanel/billing/create/$', 'create', name='syspanel_billing_create'),
-    url(r'^syspanel/billing/eventlog/$', 'eventlog', name='syspanel_eventlog')
+    url(r'^syspanel/billing/eventlog/$', 'eventlog', name='syspanel_eventlog'),
+    url(r'^syspanel/billing/create_user_with_bill/$', 'create_user_with_bill', name='syspanel_create_user_with_bill')
 )
 
 # Development static app and project media serving using the staticfiles app.

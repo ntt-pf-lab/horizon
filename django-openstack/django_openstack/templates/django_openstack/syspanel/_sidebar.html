@@ -11,8 +11,9 @@
     <li><a {% if current_sidebar == "tenants" %} class="active" {% endif %} href="{% url syspanel_tenants %}">Tenants</a></li>
     <li><a {% if current_sidebar == "users" %} class="active" {% endif %} href="{% url syspanel_users %}">Users</a></li>
     <li><a {% if current_sidebar == "quotas" %} class="active" {% endif %} href="{% url syspanel_quotas %}">Quotas</a></li>
-    <li><a {% if current_sidebar == "syspanel_billing" %} class="active" {% endif %} href="{% url syspanel_billing %}">Billing</a></li>
-    <li><a {% if current_sidebar == "syspanel_eventlog" %} class="active" {% endif %} href="{% url syspanel_eventlog %}">Event Log</a></li>
+    <li><a {% if current_sidebar == "billing" %} class="active" {% endif %} href="{% url syspanel_billing %}">Billing</a></li>
+    <li><a {% if current_sidebar == "eventlog" %} class="active" {% endif %} href="{% url syspanel_eventlog %}">Event Log</a></li>
+    <li><a {% if current_sidebar == "create_user_with_bill" %} class="active" {% endif %} href="{% url syspanel_create_user_with_bill %}">Regist User</a></li>
   </ul>
   
 

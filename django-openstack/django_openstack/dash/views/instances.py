@@ -31,13 +31,13 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
-
+from dash_billing.syspanel.models import  AccountRecord
 from django_openstack import api
 from django_openstack import forms
 from django_openstack import utils
 import openstack.compute.servers
 import openstackx.api.exceptions as api_exceptions
-
+from django.db.models.aggregates import Sum
 
 LOG = logging.getLogger('django_openstack.dash')
 
@@ -209,6 +209,10 @@ def usage(request, tenant_id=None):
         template_name = 'django_openstack/dash/instances/usage.html'
         mimetype = "text/html"
 
+    balance = 0
+    if tenant_id:
+        balance = AccountRecord.objects.filter(tenant_id=tenant_id).aggregate(Sum('amount'))
+
     return shortcuts.render_to_response(template_name, {
         'usage': usage,
         'ram_unit': ram_unit,
@@ -218,7 +222,8 @@ def usage(request, tenant_id=None):
         'show_terminated': show_terminated,
         'datetime_start': datetime_start,
         'datetime_end': datetime_end,
-        'instances': instances
+        'instances': instances,
+        'balance': balance['amount__sum'],
     }, context_instance=template.RequestContext(request), mimetype=mimetype)
 
 
