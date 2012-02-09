@@ -840,10 +840,10 @@ input:focus, textarea:focus {
 }
 
 #standalone #login_wrapper {
-  background: url(../images/logo.png) no-repeat center top;
+  background: url(../images/logo.jpg) no-repeat center top;
   width: 373px;
   margin: 40px auto 0 auto ;
-  padding-top: 91px;
+  padding-top: 200px;
 }
 #standalone #login {
   float:left;
