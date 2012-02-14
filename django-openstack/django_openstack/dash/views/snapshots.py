@@ -60,6 +60,7 @@ class CreateSnapshot(forms.SelfHandlingForm):
 
             messages.info(request, 'Snapshot "%s" created for instance "%s"' %\
                                     (data['name'], instance.name))
+            messages.warning(request, "Your snapshot AND the data you put in it will be alive for 1 week (or less if you're low on stack dollars).  Do NOT put production data or any data you do not wish to lose in the instance.  The Free Cloud is a testing sandbox ONLY and carries no SLA")
             return shortcuts.redirect('dash_snapshots', data['tenant_id'])
         except api_exceptions.ApiException, e:
             msg = 'Error Creating Snapshot: %s' % e.message
