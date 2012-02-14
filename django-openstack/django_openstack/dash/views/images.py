@@ -168,6 +168,7 @@ class LaunchForm(forms.SelfHandlingForm):
             msg = 'Instance was successfully launched'
             LOG.info(msg)
             messages.success(request, msg)
+            messages.warning(request, "Your instance AND the data you put in it will be alive for 24 hours (or less if you're low on stack dollars).  Do NOT put production data or any data you do not wish to lose in the instance.  The Free Cloud is a testing sandbox ONLY and carries no SLA")
             return redirect('dash_instances', tenant_id)
 
         except api_exceptions.ApiException, e:

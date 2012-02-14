@@ -6,12 +6,14 @@ PROD = False
 USE_SSL = False
 
 LOCAL_PATH = os.path.dirname(os.path.abspath(__file__))
-
-# FIXME: We need to change this to mysql, instead of sqlite.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(LOCAL_PATH, 'dashboard_openstack.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'dash',
+        'USER': 'dash',
+        'PASSWORD': '8gNCuMMBn3Cjc',
+        'HOST': '10.0.100.108',
+        'default-character-set': 'utf8'
     },
 }
 
@@ -26,6 +28,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_openstack',
     'django_openstack.templatetags',
+    'dash_billing.syspanel',
+    'dash_billing.dash',
 )
 
 
@@ -44,8 +48,8 @@ MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 # EMAIL_HOST_PASSWORD = 'top-secret!'
 
 # FIXME: This needs to be changed to allow for multi-node setup.
-OPENSTACK_KEYSTONE_URL = "http://localhost:5000/v2.0/"
-OPENSTACK_KEYSTONE_ADMIN_URL = "http://localhost:35357/v2.0"
+OPENSTACK_KEYSTONE_URL = "http://keystone.thefreecloud.org:5000/v2.0/"
+OPENSTACK_KEYSTONE_ADMIN_URL = "http://keystone.thefreecloud.org:5001/v2.0"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "Member"
 
 # NOTE(tres): Available services should come from the service
