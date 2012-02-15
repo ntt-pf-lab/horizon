@@ -23,6 +23,7 @@ from django.conf import settings
 from django_openstack.signals import *
 
 urlpatterns = patterns('',
+    url(r'', include('social_auth.urls')),
     url(r'^auth/', include('django_openstack.auth.urls')),
     url(r'^dash/', include('django_openstack.dash.urls')),
     url(r'^syspanel/', include('django_openstack.syspanel.urls')),

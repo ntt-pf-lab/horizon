@@ -18,7 +18,7 @@ pep8
 pylint
 coverage
 glance
-
+django-social-auth
 -e git+https://github.com/openstack/quantum.git#egg=quantum
 -e git+https://github.com/jacobian/openstack.compute.git#egg=openstack
 -e git+https://github.com/cloudbuilders/openstackx.git#egg=openstackx

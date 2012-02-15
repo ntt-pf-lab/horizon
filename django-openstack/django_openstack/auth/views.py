@@ -17,8 +17,10 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
+import os
 import logging
+import settings
+import string
 
 from django import template
 from django import shortcuts
@@ -27,8 +29,18 @@ from django.contrib import messages
 from django_openstack import api
 from django_openstack import forms
 from openstackx.api import exceptions as api_exceptions
+from social_auth import context_processors
+from social_auth.models import UserSocialAuth
+from dash_billing.syspanel.models import AccountRecord
 
+from random import choice
 
+os.environ['NOVA_USERNAME'] = settings.NOVA_USERNAME
+os.environ['NOVA_PASSWORD'] = settings.NOVA_PASSWORD
+
+from dash_billing.billing.manager import FakeRequest
+from django_openstack.middleware.keystone import User
+from django.contrib.auth.models import User as AuthUser
 LOG = logging.getLogger('django_openstack.auth')
 
 
@@ -114,7 +126,70 @@ class LoginWithTenant(Login):
     tenant = forms.CharField(widget=forms.HiddenInput())
 
 
+def _social_login(user_request, tenant_id, password):
+    try:
+        username = settings.NOVA_USERNAME
+        admin_password = settings.NOVA_PASSWORD
+        admin_tenant = settings.ADMIN_TENANT
+        token = api.token_create(None, admin_tenant ,username , admin_password)
+        admin_user = User(token.id,
+                  username,
+                  password,
+                  True,
+                  token.serviceCatalog
+        )
+        request = FakeRequest(admin_user)
+        #TODO(nati):Fix this  there are no API to check tenant_Id
+        try: 
+            tenant = api.tenant_create(request,
+                    tenant_id,
+                    "Tenant",
+                    True)
+  	    LOG.info("tenant %s is created" % tenant_id)
+            user = api.user_create(request,
+                                   tenant_id,
+                                   tenant_id + "@dammyemail",
+                                   password,
+                                   tenant.id,
+                                   True)
+            LOG.info("user %s is created" % tenant_id)
+            api.role_add_for_tenant_user(
+                request, new_tenant.id, new_user.id,
+                settings.OPENSTACK_KEYSTONE_DEFAULT_ROLE)
+            LOG.info("User role is added")
+            accountRecord = AccountRecord(tenant_id=new_tenant.id,amount=int(data['amount']),memo="Initial addtion")
+            accountRecord.save()
+            message.success(user_request,"""
+            Your Username/Password is created. Username %s Password %s
+            """ % (tenant_id,password) )
+        except Exception:
+            pass
+       
+        LOG.debug("tenant id %s %s" % (tenant_id,password) )
+        data={ 
+            "username":tenant_id,
+            "password": password }
+        login_form = Login()
+        login_form.handle(user_request,data)
+    except api_exceptions.ApiException as e:
+        messages.error(user_request,"Failed to login")
+        LOG.error("Failed to login %s %r" % (tenant_id,e) )
+        raise e
+
 def login(request):
+    if request.session.has_key('_auth_user_id'):
+        user_id = request.session['_auth_user_id']
+        social_user = UserSocialAuth.objects.get(user=user_id)
+        django_user = AuthUser.objects.get(id=user_id)
+        password = django_user.password
+        tenant_id = social_user.provider + social_user.uid
+        if not password or password == '!':
+            password = "".join([choice(string.ascii_lowercase + string.digits) for i in range(8)])
+            django_user.password = password
+            django_user.save()
+        
+        _social_login(request,tenant_id,password)
+         
     if request.user and request.user.is_authenticated():
         if request.user.is_admin():
             return shortcuts.redirect('syspanel_overview')

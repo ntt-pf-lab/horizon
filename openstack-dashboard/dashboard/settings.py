@@ -96,7 +96,7 @@ INSTALLED_APPS = (
 )
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
+AUTHENTICATION_BACKENDS = ('social_auth.backends.facebook.FacebookBackend','django.contrib.auth.backends.ModelBackend')
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
