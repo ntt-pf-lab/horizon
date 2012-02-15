@@ -1,0 +1,24 @@
+{% extends 'django_openstack/syspanel/base.html' %}
+
+{% block sidebar %}
+  {% with current_sidebar="billing" %}
+    {{block.super}}
+  {% endwith %}
+{% endblock %}
+
+{% block page_header %}
+  {% include "django_openstack/common/_page_header.html" with title="Create Account" %}
+{% endblock page_header %}
+
+{% block syspanel_main %}
+    <div class="dash_block">
+      <div class="left">
+        {% include "_create_billing.html" %}
+      </div>
+      <div class="right">
+        <h3>Description:</h3>
+        <p>From here you can define the new account.</p>
+      </div>
+      <div class="clear">&nbsp;</div>
+    </div>
+{% endblock %}

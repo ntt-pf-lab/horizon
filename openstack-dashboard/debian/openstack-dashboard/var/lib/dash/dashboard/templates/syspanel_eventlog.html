@@ -1,0 +1,80 @@
+{% extends 'django_openstack/syspanel/base.html' %}
+
+{% block sidebar %}
+  {% with current_sidebar="eventlog" %}
+    {{block.super}}
+  {% endwith %}
+{% endblock %}
+
+{% block page_header %}
+{% include "_billing_page_header.html" with title="Event Log" page_number=eventlog_list.number %}
+{% endblock page_header %}
+
+{% block syspanel_main %}
+  {% if eventlog_list.object_list  %}
+    {% include '_eventlog.html' %}
+  {% else %}
+    <div class="message_box info">
+      <h2>Info</h2>
+      <p>There are currently no event log. </p>
+    </div>
+  {% endif %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if eventlog_list.has_previous %}
+            <a href="?{{query}}&page={{ eventlog_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ eventlog_list.number }} of {{ eventlog_list.paginator.num_pages }}.
+        </span>
+
+        {% if eventlog_list.has_next %}
+            <a href="?{{query}}&page={{ eventlog_list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}
+
+{% block footer_js %}
+  <script type="text/javascript" charset="utf-8">
+    $(function(){
+      function loadInstances(){
+          if ($("#ajax_option_box").is(':checked')) {
+              $('.refresh').addClass("refreshing");
+              $('#eventlogs').load('?{{query}}&page={{ eventlog_list.number }}&refresh=1', function(){
+              $('.refresh').removeClass("refreshing");
+              });
+          }
+      }
+      setInterval(function(){
+        loadInstances();
+      }, 3000);
+
+      loadOptionsWidget();
+
+      $("a.refresh").click(function(e){
+        e.preventDefault()
+        loadInstances();
+      })
+
+      function loadOptionsWidget(){
+        checkbox = document.createElement("input");
+          cb = $(checkbox);
+          cb.attr('id', 'ajax_option_box');
+          cb.attr('class', 'refreshOption');
+          cb.attr('type', 'checkbox');
+        checkbox_label = document.createElement("label");
+          cbl = $(checkbox_label);
+          cbl.attr('class', 'refreshOption');
+          cbl.text('auto refresh');
+          cbl.attr('for', 'ajax_option_box');
+          $('.right').append(cb);
+          $('.right').append(cbl);
+      }
+    })
+  </script>
+{% endblock footer_js %}
+
+
