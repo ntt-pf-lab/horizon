@@ -21,7 +21,8 @@ import os
 import logging
 import settings
 import string
-
+import json 
+import urllib
 from django import template
 from django import shortcuts
 from django.contrib import messages
@@ -154,10 +155,10 @@ def _social_login(user_request, tenant_id, password):
                                    True)
             LOG.info("user %s is created" % tenant_id)
             api.role_add_for_tenant_user(
-                request, new_tenant.id, new_user.id,
+                request, tenant.id, user.id,
                 settings.OPENSTACK_KEYSTONE_DEFAULT_ROLE)
             LOG.info("User role is added")
-            accountRecord = AccountRecord(tenant_id=new_tenant.id,amount=int(data['amount']),memo="Initial addtion")
+            accountRecord = AccountRecord(tenant_id=tenant.id,amount=int(1000),memo="Initial addtion")
             accountRecord.save()
             message.success(user_request,"""
             Your Username/Password is created. Username %s Password %s
@@ -183,13 +184,29 @@ def login(request):
         django_user = AuthUser.objects.get(id=user_id)
         password = django_user.password
         tenant_id = social_user.provider + social_user.uid
+
+
         if not password or password == '!':
             password = "".join([choice(string.ascii_lowercase + string.digits) for i in range(8)])
             django_user.password = password
             django_user.save()
-        
-        _social_login(request,tenant_id,password)
-         
+
+        if social_user.provider == "facebook":        
+            LOG.debug("%r" % social_user.extra_data['access_token'])  
+            try:
+                group_url = "https://graph.facebook.com/269238013145112/members?access_token=%s" % social_user.extra_data['access_token']
+                f = urllib.urlopen(group_url)
+                graph_data_json = f.read()
+                f.close()
+                graph_data = json.loads(graph_data_json)
+                if len(graph_data['data']) > 0 :
+                    LOG.debug("graph_data %r" % graph_data)
+                    _social_login(request,tenant_id,password)
+                else:
+                    messages.error(request, "Your facebookID is not in TryStack group yet.")
+            except Exception as e:
+	        messages.error(request,"Failed to login facebookID")      
+  
     if request.user and request.user.is_authenticated():
         if request.user.is_admin():
             return shortcuts.redirect('syspanel_overview')
