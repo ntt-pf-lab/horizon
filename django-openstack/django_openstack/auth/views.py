@@ -139,7 +139,7 @@ def _social_login(user_request, tenant_id, password):
                   token.serviceCatalog
         )
         request = FakeRequest(admin_user)
-        #TODO(nati):Fix this  there are no API to check tenant_Id
+        #TODO(nati):Fix this  there are no API to check tenant_Id on diablo version
         try: 
             tenant = api.tenant_create(request,
                     tenant_id,
