@@ -160,7 +160,7 @@ def _social_login(user_request, tenant_id, password):
             LOG.info("User role is added")
             accountRecord = AccountRecord(tenant_id=tenant.id,amount=int(1000),memo="Initial addtion")
             accountRecord.save()
-            message.success(user_request,"""
+            messages.success(user_request,"""
             Your Username/Password is created. Username %s Password %s
             """ % (tenant_id,password) )
         except Exception:
