@@ -11,6 +11,7 @@
     <li><a {% if current_sidebar == "security_groups" %} class="active" {% endif %} href="{% url dash_security_groups request.user.tenant_id %}">Security Groups</a></li>
     <li><a {% if current_sidebar == "dash_billing" %} class="active" {% endif %} href="{% url dash_billing %}">Billing</a></li>
     <li><a {% if current_sidebar == "dash_eventlog" %} class="active" {% endif %} href="{% url dash_eventlog %}">Event Log</a></li>
+    <li><a {% if current_sidebar == "dash_api_info" %} class="active" {% endif %} href="{% url dash_api_info %}">API</a></li>
     {% if quantum_configured %}
       <li><a {% if current_sidebar == "networks" %} class="active" {% endif %} href="{% url dash_networks request.user.tenant_id %}">Networks</a></li>
     {% endif %}
@@ -21,6 +22,6 @@
     <li><a {% if current_sidebar == "containers" %} class="active" {% endif %} href="{% url dash_containers request.user.tenant_id %}">Containers</a></li>
   </ul>
   {% endif %}
-  
-  
+
+
 </div>

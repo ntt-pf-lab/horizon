@@ -226,6 +226,17 @@ def usage(request, tenant_id=None):
         'balance': balance['amount__sum'],
     }, context_instance=template.RequestContext(request), mimetype=mimetype)
 
+@login_required
+def api_info(request):
+    username = request.session['username']
+    password = request.session['password']
+    tenant = request.session['tenant']
+    return shortcuts.render_to_response('django_openstack/dash/instances/api.html',  {
+        'username': username,
+        'password': password,
+        'tenant': tenant
+    }, context_instance=template.RequestContext(request))
+
 
 @login_required
 def console(request, tenant_id, instance_id):

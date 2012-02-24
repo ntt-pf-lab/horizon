@@ -32,6 +32,7 @@ NETWORKS = r'^(?P<tenant_id>[^/]+)/networks/%s$'
 PORTS = r'^(?P<tenant_id>[^/]+)/networks/(?P<network_id>[^/]+)/ports/%s$'
 
 urlpatterns = patterns('django_openstack.dash.views.instances',
+    url(r'^api_info/$', 'api_info', name='dash_api_info'),
     url(r'^(?P<tenant_id>[^/]+)/$', 'usage', name='dash_usage'),
     url(r'^(?P<tenant_id>[^/]+)/instances/$', 'index', name='dash_instances'),
     url(r'^(?P<tenant_id>[^/]+)/instances/refresh$', 'refresh',

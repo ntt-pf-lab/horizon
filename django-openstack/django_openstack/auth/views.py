@@ -21,7 +21,7 @@ import os
 import logging
 import settings
 import string
-import json 
+import json
 import urllib
 from django import template
 from django import shortcuts
@@ -99,6 +99,8 @@ class Login(forms.SelfHandlingForm):
                                          data.get('tenant', tenant.id),
                                          token.id)
 
+            request.session['username'] = data['username']
+            request.session['password'] = data['password']
             request.session['admin'] = is_admin(token)
             request.session['serviceCatalog'] = token.serviceCatalog
 
@@ -141,12 +143,12 @@ def _social_login(user_request, tenant_id, password):
         )
         request = FakeRequest(admin_user)
         #TODO(nati):Fix this  there are no API to check tenant_Id on diablo version
-        try: 
+        try:
             tenant = api.tenant_create(request,
                     tenant_id,
                     "Tenant",
                     True)
-  	    LOG.info("tenant %s is created" % tenant_id)
+            LOG.info("tenant %s is created" % tenant_id)
             user = api.user_create(request,
                                    tenant_id,
                                    tenant_id + "@dammyemail",
@@ -165,9 +167,9 @@ def _social_login(user_request, tenant_id, password):
             """ % (tenant_id,password) )
         except Exception:
             pass
-       
+
         LOG.debug("tenant id %s %s" % (tenant_id,password) )
-        data={ 
+        data={
             "username":tenant_id,
             "password": password }
         login_form = Login()
@@ -191,8 +193,8 @@ def login(request):
             django_user.password = password
             django_user.save()
 
-        if social_user.provider == "facebook":        
-            LOG.debug("%r" % social_user.extra_data['access_token'])  
+        if social_user.provider == "facebook":
+            LOG.debug("%r" % social_user.extra_data['access_token'])
             try:
                 group_url = "https://graph.facebook.com/269238013145112/members?access_token=%s" % social_user.extra_data['access_token']
                 f = urllib.urlopen(group_url)
@@ -205,8 +207,8 @@ def login(request):
                 else:
                     messages.error(request, "Your facebookID is not in TryStack group yet.")
             except Exception as e:
-	        messages.error(request,"Failed to login facebookID")      
-  
+                messages.error(request,"Failed to login facebookID")
+
     if request.user and request.user.is_authenticated():
         if request.user.is_admin():
             return shortcuts.redirect('syspanel_overview')
