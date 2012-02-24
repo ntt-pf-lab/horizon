@@ -1,0 +1,32 @@
+{% extends 'django_openstack/dash/base.html' %}
+{% load parse_date %}
+{% load sizeformat %}
+
+{% block sidebar %}
+  {% with current_sidebar="dash_api_info" %}
+    {{block.super}}
+  {% endwith %}
+{% endblock %}
+
+{% block page_header %}
+  {# to make searchable false, just remove it from the include statement #}
+  {% include "django_openstack/common/_page_header.html" with title="API" %}
+{% endblock page_header %}
+
+{% block dash_main %}
+<div id="usage">
+    Your API Credential<br>
+      User name : {{username}} <br>
+      Password : {{password}} <br>
+      <br>
+      How to use nova command<br>
+      export NOVA_USERNAME={{username}}<br>
+      export NOVA_API_KEY={{password}}<br>
+      export NOVA_PROJECT_ID={{tenant}}<br>
+      export NOVA_URL=http://trystack.org:5443/v2.0<br>
+      export NOVA_VERSION=1.1<br>
+      <br>
+      nova list<br>
+      <a href="http://docs.openstack.org/api/quick-start/content/">For more tutorial</a>
+  </div>
+{% endblock %}
